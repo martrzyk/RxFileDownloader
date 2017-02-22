@@ -1,13 +1,7 @@
 package com.martrzyk.filerxdownloader.recycler_view;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-
-import com.thanksagain.mobile.utils.analytics.AnalyticsManager;
-import com.thanksagain.mobile.utils.analytics.AnswersTracker;
-import com.thanksagain.mobile.utils.analytics.FirebaseAnalyticsTracker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +16,6 @@ public abstract class RecyclerViewItem {
     @Setter
     @Getter
     private int viewType = 0;
-    public AnalyticsManager analyticsManager;
 
     public abstract RecyclerView.ViewHolder getViewHolder(ViewGroup parent);
 
@@ -55,19 +48,6 @@ public abstract class RecyclerViewItem {
 
     public void onDestroy() {
         unsubscribeAll();
-    }
-
-
-    public void initializeAnalytics(Activity context) {
-        analyticsManager =
-                AnalyticsManager
-                        .builder()
-                        .tracker(new FirebaseAnalyticsTracker())
-                        .tracker(new AnswersTracker())
-                        .build()
-                        .initialize(context);
-
-        analyticsManager.reportScreenPresented(context, this.getClass().getName(), this.getClass().getSimpleName());
     }
 
     public boolean onBackPressed() {

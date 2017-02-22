@@ -33,24 +33,8 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void addItem(RecyclerViewItem newItem) {
         itemPositionMap.put(newItem, itemPositionMap.size());
-        if (newItem instanceof Loadable) {
-            loadedItemLeft.incrementAndGet();
-            ((Loadable) newItem).setOnLoadListener((loadedItem, hasData) -> {
-                loadedItemLeft.decrementAndGet();
-                if (hasData) {
-                    addItemOnCorrectPosition(loadedItem);
-                } else {
-                    removeItem(loadedItem);
-                }
-                if (loadedItemLeft.get() == 0 && listener != null) {
-                    listener.onAllItemLoaded();
-                }
-            });
-            ((Loadable) newItem).loadData();
-        } else {
-            newItem.setViewType(items.size() + 1);
-            items.add(newItem);
-        }
+        newItem.setViewType(items.size() + 1);
+        items.add(newItem);
     }
 
     public void setOnLoadFinishListener(OnLoadFinishListener listener) {
@@ -149,14 +133,5 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public interface OnLoadFinishListener {
         void onAllItemLoaded();
-    }
-
-    public boolean onBackPressed() {
-        for (RecyclerViewItem item : items) {
-            if (item.onBackPressed() == false) {
-                return false;
-            }
-        }
-        return true;
     }
 }

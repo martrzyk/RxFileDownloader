@@ -5,4 +5,6 @@ package com.martrzyk.filerxdownloader;
  */
 
 public class Picture {
+    String name;
+    String address;
 }

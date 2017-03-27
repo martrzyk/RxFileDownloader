@@ -6,25 +6,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import rx.Observable;
 
-public class RxFileCache {
+class FileDownloadManager {
     @Getter
     final ConcurrentHashMap<String, Observable<File>> cache;
 
-    private static RxFileCache instance;
+    private static FileDownloadManager instance;
 
-    public static RxFileCache getInstance() {
-        if(instance == null)
-            instance = new RxFileCache();
+    static FileDownloadManager with() {
+        if (instance == null)
+            instance = new FileDownloadManager();
 
         return instance;
     }
 
-    public RxFileCache() {
+    private FileDownloadManager() {
         this.cache = new ConcurrentHashMap<>();
     }
 
-    public Observable<String> get(String key) {
-        Observable o = cache.get(key);
+    Observable<File> get(String key) {
+        Observable<File> o = cache.get(key);
 
         if (o != null) {
             return o;
@@ -33,13 +33,12 @@ public class RxFileCache {
         return null;
     }
 
-    public boolean contains(String key)
-    {
+    public boolean contains(String key) {
         Observable o = cache.get(key);
         return o != null;
     }
 
-    public void remove(String key) {
+    void remove(String key) {
         cache.remove(key);
     }
 }

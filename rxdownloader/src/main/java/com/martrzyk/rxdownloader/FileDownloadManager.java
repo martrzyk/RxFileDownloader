@@ -1,12 +1,14 @@
 package com.martrzyk.rxdownloader;
 
+import com.martrzyk.rxdownloader.model.DownloadManager;
+
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
 import rx.Observable;
 
-class FileDownloadManager {
+class FileDownloadManager implements DownloadManager<String, Observable<File>> {
     @Getter
     final ConcurrentHashMap<String, Observable<File>> cache;
 
@@ -23,7 +25,8 @@ class FileDownloadManager {
         this.cache = new ConcurrentHashMap<>();
     }
 
-    Observable<File> get(String key) {
+    @Override
+    public Observable<File> get(String key) {
         Observable<File> o = cache.get(key);
 
         if (o != null) {
@@ -33,12 +36,18 @@ class FileDownloadManager {
         return null;
     }
 
+    @Override
     public boolean contains(String key) {
         Observable o = cache.get(key);
         return o != null;
     }
 
-    void remove(String key) {
+    @Override
+    public void add(String key, Observable<File> value) {
+    }
+
+    @Override
+    public void remove(String key) {
         cache.remove(key);
     }
 }

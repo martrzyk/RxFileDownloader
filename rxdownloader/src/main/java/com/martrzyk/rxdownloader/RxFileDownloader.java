@@ -1,5 +1,7 @@
 package com.martrzyk.rxdownloader;
 
+import com.martrzyk.rxdownloader.model.Download;
+
 /**
  * File downloader and caching manager
  * <p>
@@ -25,6 +27,6 @@ public class RxFileDownloader {
     }
 
     public void addFileToDownload() {
-
+        new Download("", "", "");
     }
 }

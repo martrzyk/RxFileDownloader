@@ -2,7 +2,7 @@ package com.martrzyk.rxdownloader.model;
 
 import android.text.TextUtils;
 
-import com.martrzyk.rxdownloader.utils.HashingUtil;
+import com.martrzyk.rxdownloader.utils.SupportUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +26,6 @@ public class Download {
             throw new NoSuchFieldError("tag cannot be empty!");
         }
 
-        return HashingUtil.createMd5FromText(tag);
+        return SupportUtils.createMd5FromText(tag);
     }
 }

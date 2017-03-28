@@ -8,7 +8,7 @@ import com.martrzyk.filerxdownloader.recycler_view.RecyclerViewItem;
 import com.martrzyk.filerxdownloader.rxfiledownloader.R;
 import com.martrzyk.rxdownloader.model.Download;
 import com.martrzyk.rxdownloader.Downloader;
-import com.martrzyk.rxdownloader.utils.HashingUtil;
+import com.martrzyk.rxdownloader.utils.SupportUtils;
 
 /**
  * Created by mar3k on 2017-02-22.
@@ -33,7 +33,7 @@ public class PictureItem extends RecyclerViewItem {
     public void bind(RecyclerView.ViewHolder holder) {
         String savePath = context.getExternalFilesDir(null) + "/" + context.getResources().getString(R.string.pictures);
 
-        Download object = new Download(HashingUtil.md5(picture.address), HashingUtil.md5(picture.address), picture.address);
+        Download object = new Download(SupportUtils.md5(picture.address), SupportUtils.md5(picture.address), picture.address);
         Downloader
                 .download(savePath, object)
                 .subscribe(o -> {

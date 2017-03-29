@@ -1,15 +1,18 @@
 package com.martrzyk.rxdownloader.model;
 
+
+import rx.Observable;
+
 /**
  * Created by Marek on 2017-03-27.
  */
 
-public interface DownloadManager<K, V> {
-    void add(K key, V value);
+public interface DownloadManager {
+    void add(String key, Observable value);
 
-    void remove(K removeKey);
+    void remove(String removeKey);
 
-    boolean contains(K containsKey);
+    boolean contains(String containsKey);
 
-    V get(K getKey);
+    Observable get(String getKey);
 }

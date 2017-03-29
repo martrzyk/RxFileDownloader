@@ -14,7 +14,7 @@ import com.martrzyk.rxdownloader.utils.SupportUtils;
  * Created by mar3k on 2017-02-22.
  */
 
-public class PictureItem extends RecyclerViewItem {
+class PictureItem extends RecyclerViewItem {
     private Picture picture;
     private Context context;
 
@@ -33,10 +33,10 @@ public class PictureItem extends RecyclerViewItem {
     public void bind(RecyclerView.ViewHolder holder) {
         String savePath = context.getExternalFilesDir(null) + "/" + context.getResources().getString(R.string.pictures);
 
-        Download object = new Download(SupportUtils.md5(picture.address), SupportUtils.md5(picture.address), picture.address);
-        Downloader
-                .download(savePath, object)
-                .subscribe(o -> {
-                });
+        Download object = new Download(SupportUtils.createMd5FromText(picture.address), SupportUtils.createMd5FromText(picture.address), picture.address);
+//        Downloader
+//                .download(savePath, object)
+//                .subscribe(o -> {
+//                });
     }
 }

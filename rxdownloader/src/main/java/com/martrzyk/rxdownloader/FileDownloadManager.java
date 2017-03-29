@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import rx.Observable;
 
-class FileDownloadManager implements DownloadManager<String, Observable<File>> {
+class FileDownloadManager implements DownloadManager {
     @Getter
-    final ConcurrentHashMap<String, Observable<File>> cache;
+    final ConcurrentHashMap<String, Observable> cache;
 
     private static FileDownloadManager instance;
 
@@ -26,8 +26,8 @@ class FileDownloadManager implements DownloadManager<String, Observable<File>> {
     }
 
     @Override
-    public Observable<File> get(String key) {
-        Observable<File> o = cache.get(key);
+    public Observable get(String key) {
+        Observable o = cache.get(key);
 
         if (o != null) {
             return o;
@@ -43,7 +43,8 @@ class FileDownloadManager implements DownloadManager<String, Observable<File>> {
     }
 
     @Override
-    public void add(String key, Observable<File> value) {
+    public void add(String key, Observable value) {
+        cache.putIfAbsent(key, value);
     }
 
     @Override

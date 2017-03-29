@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">RxFileDownloader</string>
+    <string-array name="addresses">
+        <item>https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?w=1260&amp;h=750&amp;auto=compress&amp;cs=tinysrgb</item>
+        <item>http://writm.com/wp-content/uploads/2016/08/Cat-hd-wallpapers.jpg</item>
+        <item>http://www.cats.org.uk/uploads/images/featurebox_sidebar_kids/grief-and-loss.jpg</item>
+        <item>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAMdBq4IDdz_e8pU3nX_3KQFuYpkdBlgStMBqV-JJ7xZROrKtd</item>
+        <item>http://blogs.discovermagazine.com/d-brief/files/2013/12/cat.jpg</item>
+        <item>https://s-media-cache-ak0.pinimg.com/736x/07/c3/45/07c345d0eca11d0bc97c894751ba1b46.jpg</item>
+        <item>https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR4I84Hdc5gmZXJ2FVsMvSa13w5f4LmNJCJyxCY3g1YiESTEIwR</item>
+        <item>http://img.huffingtonpost.com/asset/2000_1000/582cad7f1a00002400cc83ee.jpeg?cache=qhcqyjzhoe</item>
+        <item>https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRG-yoRr5DbLzuuk4Z11GLjR_bMUODwCS38NvuKKpcl57ZHK7hz</item>
+    </string-array>
 </resources>

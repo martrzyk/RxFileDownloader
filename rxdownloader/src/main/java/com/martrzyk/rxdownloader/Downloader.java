@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,6 +25,8 @@ import rx.exceptions.OnErrorThrowable;
 import rx.schedulers.Schedulers;
 
 @Builder
+@Getter
+@Setter
 public class Downloader {
     private DownloadManager downloadManager;
     @Builder.Default
@@ -30,12 +34,12 @@ public class Downloader {
     @Builder.Default
     private int maxConcurrent = 10;
 
-    public Observable download(String directoryPath, Download things) {
+    Observable download(String directoryPath, Download downloadData) {
         if (downloadManager == null)
             throw new IllegalArgumentException("You must provide instance of DownloadManager");
 
         ArrayList<Download> files = new ArrayList<>();
-        files.add(things);
+        files.add(downloadData);
 
         return download(directoryPath, files, bufferSize, maxConcurrent);
     }
@@ -47,17 +51,16 @@ public class Downloader {
                 .flatMap(fileObj -> {
                             File file = new File(localDirectoryPath + File.separator + fileObj.getName());
 
-                            FileDownloadManager cache = FileDownloadManager.with();
                             if (file.exists()) {
                                 return Observable.just(file);
                             }
 
-                            if (cache.get(fileObj.getTag()) != null) {
+                            if (downloadManager.contains(fileObj.getTag())) {
                                 return null;
                             }
 
-                            Observable<File> observable = fileDownload(fileObj, file);
-                            cache.cache.putIfAbsent(fileObj.getTag(), observable);
+                            Observable observable = fileDownload(fileObj, file);
+                            downloadManager.add(fileObj.getTag(), observable);
 
                             return observable;
                         }
@@ -67,16 +70,16 @@ public class Downloader {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private Observable<File> fileDownload(final Download fileObj, final File file) {
+    private Observable fileDownload(final Download downloadData, final File outputFile) {
 
-        Observable<File> fileObservable = Observable.create(
-                sub -> {
-                    if (sub.isUnsubscribed()) {
+        return Observable.create(
+                subscriber -> {
+                    if (subscriber.isUnsubscribed()) {
                         return;
                     }
 
                     OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url(fileObj.getUrl()).build();
+                    Request request = new Request.Builder().url(downloadData.getUrl()).build();
 
                     Response response;
                     try {
@@ -85,26 +88,24 @@ public class Downloader {
                             throw new IOException();
                         }
 
-                        if (!sub.isUnsubscribed()) {
-                            BufferedSink sink = Okio.buffer(Okio.sink(file));
+                        if (!subscriber.isUnsubscribed()) {
+                            BufferedSink sink = Okio.buffer(Okio.sink(outputFile));
                             sink.writeAll(response.body().source());
                             sink.flush();
                             sink.close();
-                            sub.onNext(file);
-                            sub.onCompleted();
+                            subscriber.onNext(outputFile);
+                            subscriber.onCompleted();
 
                             FileDownloadManager cache = FileDownloadManager.with();
-                            cache.remove(fileObj.getName());
+                            cache.remove(downloadData.getTag());
                         }
                     } catch (IOException io) {
                         FileDownloadManager cache = FileDownloadManager.with();
-                        cache.remove(fileObj.getName());
+                        cache.remove(downloadData.getTag());
 
-                        throw OnErrorThrowable.from(OnErrorThrowable.addValueAsLastCause(io, fileObj));
+                        throw OnErrorThrowable.from(OnErrorThrowable.addValueAsLastCause(io, downloadData));
                     }
-                });
-        fileObservable.subscribeOn(Schedulers.io());
-
-        return fileObservable;
+                })
+                .subscribeOn(Schedulers.io());
     }
 }
